@@ -6,36 +6,36 @@ require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/visitor.php';
 
 
-/*
-|--------------------------------------------------------------------------
-| TRACK VISITOR
-|--------------------------------------------------------------------------
-*/
+// =====================================================
+// VISITOR TRACKING
+// =====================================================
+//
+// Tracking dibuat terpisah dari tampilan website.
+// Jika tracking gagal, website tetap harus berjalan.
+//
 
 track_visitor('home');
 
 
-/*
-|--------------------------------------------------------------------------
-| WEBSITE DATA
-|--------------------------------------------------------------------------
-*/
+// =====================================================
+// WEBSITE DATA
+// =====================================================
 
 $settings = db()->query(
-    "SELECT * FROM settings WHERE id=1"
+    "SELECT * FROM settings WHERE id = 1"
 )->fetch() ?: [];
 
 
 $projects = db()->query(
     "SELECT * FROM projects
-     WHERE published=1
+     WHERE published = 1
      ORDER BY featured DESC, created_at DESC"
 )->fetchAll();
 
 
 $assets = db()->query(
     "SELECT * FROM assets
-     WHERE published=1
+     WHERE published = 1
      ORDER BY created_at DESC"
 )->fetchAll();
 
@@ -43,6 +43,29 @@ $assets = db()->query(
 $isAdmin = is_admin_logged_in();
 
 $loggedUser = current_user();
+
+
+// =====================================================
+// SETTINGS VARIABLES
+// =====================================================
+
+$siteTitle = $settings['site_title']
+    ?? SITE_NAME;
+
+$tagline = $settings['tagline']
+    ?? 'Game Developer • 3D Artist • Programmer';
+
+$about = $settings['about']
+    ?? '';
+
+$githubUrl = $settings['github_url']
+    ?? '';
+
+$itchUrl = $settings['itch_url']
+    ?? '';
+
+$email = $settings['email']
+    ?? '';
 
 ?>
 <!doctype html>
@@ -55,26 +78,27 @@ $loggedUser = current_user();
 
     <meta
         name="viewport"
-        content="width=device-width,initial-scale=1"
+        content="width=device-width, initial-scale=1"
     >
 
     <title>
-        <?= e(
-            $settings['site_title']
-            ?? SITE_NAME
-        ) ?>
+        <?= e($siteTitle) ?>
     </title>
 
 
-    <!-- MAIN WEBSITE CSS -->
+    <!-- =================================================
+         WEBSITE CSS
+    ================================================== -->
 
     <link
         rel="stylesheet"
-        href="assets/css/style.css?v=4"
+        href="assets/css/style.css?v=5"
     >
 
 
-    <!-- 3D MODEL VIEWER -->
+    <!-- =================================================
+         GOOGLE MODEL VIEWER
+    ================================================== -->
 
     <script
         type="module"
@@ -103,10 +127,7 @@ $loggedUser = current_user();
             href="#home"
         >
 
-            <?= e(
-                $settings['site_title']
-                ?? SITE_NAME
-            ) ?>
+            <?= e($siteTitle) ?>
 
         </a>
 
@@ -224,7 +245,7 @@ $loggedUser = current_user();
 
 
 <!-- =====================================================
-     MAIN CONTENT
+     MAIN
 ===================================================== -->
 
 <main>
@@ -248,22 +269,12 @@ $loggedUser = current_user();
 
 
         <h1>
-
-            <?= e(
-                $settings['tagline']
-                ?? 'Game Developer • 3D Artist • Programmer'
-            ) ?>
-
+            <?= e($tagline) ?>
         </h1>
 
 
         <p class="lead">
-
-            <?= e(
-                $settings['about']
-                ?? ''
-            ) ?>
-
+            <?= e($about) ?>
         </p>
 
 
@@ -278,19 +289,13 @@ $loggedUser = current_user();
             </a>
 
 
-            <?php if (
-                !empty(
-                    $settings['github_url']
-                )
-            ): ?>
+            <?php if (!empty($githubUrl)): ?>
 
                 <a
                     class="btn"
+                    href="<?= e($githubUrl) ?>"
                     target="_blank"
                     rel="noopener noreferrer"
-                    href="<?= e(
-                        $settings['github_url']
-                    ) ?>"
                 >
                     GitHub
                 </a>
@@ -338,21 +343,15 @@ $loggedUser = current_user();
         <div class="grid">
 
 
-            <?php foreach (
-                $projects
-                as $p
-            ): ?>
+            <?php foreach ($projects as $p): ?>
 
 
                 <article class="card">
 
 
-                    <?php if (
-                        !empty(
-                            $p['thumbnail']
-                        )
-                    ): ?>
+                    <!-- PROJECT IMAGE -->
 
+                    <?php if (!empty($p['thumbnail'])): ?>
 
                         <img
                             src="<?= e(
@@ -366,17 +365,16 @@ $loggedUser = current_user();
                             loading="lazy"
                         >
 
-
                     <?php else: ?>
-
 
                         <div class="placeholder">
                             PROJECT
                         </div>
 
-
                     <?php endif; ?>
 
+
+                    <!-- PROJECT CONTENT -->
 
                     <div class="card-body">
 
@@ -417,7 +415,6 @@ $loggedUser = current_user();
                                 )
                             ): ?>
 
-
                                 <a
                                     href="<?= e(
                                         $p['project_url']
@@ -428,7 +425,6 @@ $loggedUser = current_user();
                                     Project ↗
                                 </a>
 
-
                             <?php endif; ?>
 
 
@@ -437,7 +433,6 @@ $loggedUser = current_user();
                                     $p['github_url']
                                 )
                             ): ?>
-
 
                                 <a
                                     href="<?= e(
@@ -448,7 +443,6 @@ $loggedUser = current_user();
                                 >
                                     Source ↗
                                 </a>
-
 
                             <?php endif; ?>
 
@@ -465,11 +459,9 @@ $loggedUser = current_user();
 
             <?php if (!$projects): ?>
 
-
                 <p class="muted">
                     No projects published yet.
                 </p>
-
 
             <?php endif; ?>
 
@@ -514,35 +506,24 @@ $loggedUser = current_user();
         <div class="model-grid">
 
 
-            <?php foreach (
-                $projects
-                as $p
-            ): ?>
+            <?php foreach ($projects as $p): ?>
 
 
                 <?php
 
-                if (
-                    empty(
-                        $p['model_url']
-                    )
-                ) {
+                if (empty($p['model_url'])) {
                     continue;
                 }
+
+
+                $modelFormat = strtolower(
+                    $p['model_format'] ?? ''
+                );
 
                 ?>
 
 
                 <article class="model-card">
-
-
-                    <?php
-
-                    $modelFormat = strtolower(
-                        $p['model_format'] ?? ''
-                    );
-
-                    ?>
 
 
                     <?php if (
@@ -574,7 +555,7 @@ $loggedUser = current_user();
 
                             <?= e(
                                 strtoupper(
-                                    $p['model_format']
+                                    $modelFormat
                                 )
                             ) ?>
 
@@ -658,14 +639,13 @@ $loggedUser = current_user();
         <div class="grid">
 
 
-            <?php foreach (
-                $assets
-                as $a
-            ): ?>
+            <?php foreach ($assets as $a): ?>
 
 
                 <article class="card">
 
+
+                    <!-- ASSET IMAGE -->
 
                     <?php if (
                         !empty(
@@ -697,6 +677,8 @@ $loggedUser = current_user();
 
                     <?php endif; ?>
 
+
+                    <!-- ASSET CONTENT -->
 
                     <div class="card-body">
 
@@ -829,10 +811,7 @@ $loggedUser = current_user();
         <p>
 
             <?= nl2br(
-                e(
-                    $settings['about']
-                    ?? ''
-                )
+                e($about)
             ) ?>
 
         </p>
@@ -841,63 +820,39 @@ $loggedUser = current_user();
         <div class="socials">
 
 
-            <?php if (
-                !empty(
-                    $settings['github_url']
-                )
-            ): ?>
-
+            <?php if (!empty($githubUrl)): ?>
 
                 <a
-                    href="<?= e(
-                        $settings['github_url']
-                    ) ?>"
+                    href="<?= e($githubUrl) ?>"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
                     GitHub
                 </a>
 
-
             <?php endif; ?>
 
 
-            <?php if (
-                !empty(
-                    $settings['itch_url']
-                )
-            ): ?>
-
+            <?php if (!empty($itchUrl)): ?>
 
                 <a
-                    href="<?= e(
-                        $settings['itch_url']
-                    ) ?>"
+                    href="<?= e($itchUrl) ?>"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
                     itch.io
                 </a>
 
-
             <?php endif; ?>
 
 
-            <?php if (
-                !empty(
-                    $settings['email']
-                )
-            ): ?>
-
+            <?php if (!empty($email)): ?>
 
                 <a
-                    href="mailto:<?= e(
-                        $settings['email']
-                    ) ?>"
+                    href="mailto:<?= e($email) ?>"
                 >
                     Email
                 </a>
-
 
             <?php endif; ?>
 
@@ -923,10 +878,7 @@ $loggedUser = current_user();
 
         © <?= date('Y') ?>
 
-        <?= e(
-            $settings['site_title']
-            ?? SITE_NAME
-        ) ?>
+        <?= e($siteTitle) ?>
 
     </div>
 
@@ -975,32 +927,34 @@ if (toggle && menu) {
 
     menu
         .querySelectorAll('a')
-        .forEach(function (link) {
+        .forEach(
+            function (link) {
 
-            link.addEventListener(
-                'click',
-                function () {
+                link.addEventListener(
+                    'click',
+                    function () {
 
-                    if (
-                        window.innerWidth <= 768
-                    ) {
+                        if (
+                            window.innerWidth <= 768
+                        ) {
 
-                        menu.classList.remove(
-                            'is-open'
-                        );
+                            menu.classList.remove(
+                                'is-open'
+                            );
 
 
-                        toggle.setAttribute(
-                            'aria-expanded',
-                            'false'
-                        );
+                            toggle.setAttribute(
+                                'aria-expanded',
+                                'false'
+                            );
+
+                        }
 
                     }
+                );
 
-                }
-            );
-
-        });
+            }
+        );
 
 }
 
