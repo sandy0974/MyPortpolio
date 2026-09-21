@@ -1,11 +1,30 @@
 <?php
+
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/functions.php';
+require_once __DIR__ . '/visitor.php';
+
+
+/*
+|--------------------------------------------------------------------------
+| TRACK VISITOR
+|--------------------------------------------------------------------------
+*/
+
+track_visitor('home');
+
+
+/*
+|--------------------------------------------------------------------------
+| WEBSITE DATA
+|--------------------------------------------------------------------------
+*/
 
 $settings = db()->query(
     "SELECT * FROM settings WHERE id=1"
 )->fetch() ?: [];
+
 
 $projects = db()->query(
     "SELECT * FROM projects
@@ -13,17 +32,21 @@ $projects = db()->query(
      ORDER BY featured DESC, created_at DESC"
 )->fetchAll();
 
+
 $assets = db()->query(
     "SELECT * FROM assets
      WHERE published=1
      ORDER BY created_at DESC"
 )->fetchAll();
 
-$isAdmin = is_admin_logged_in();
-$loggedUser = current_user();
-?>
 
+$isAdmin = is_admin_logged_in();
+
+$loggedUser = current_user();
+
+?>
 <!doctype html>
+
 <html lang="en">
 
 <head>
@@ -32,51 +55,37 @@ $loggedUser = current_user();
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1"
+        content="width=device-width,initial-scale=1"
     >
 
     <title>
-        <?= e($settings['site_title'] ?? SITE_NAME) ?>
+        <?= e(
+            $settings['site_title']
+            ?? SITE_NAME
+        ) ?>
     </title>
 
-    <!-- Main CSS -->
+
+    <!-- MAIN WEBSITE CSS -->
+
     <link
         rel="stylesheet"
-        href="assets/css/style.css?v=3"
+        href="assets/css/style.css?v=4"
     >
 
-    <!-- 3D Model Viewer -->
+
+    <!-- 3D MODEL VIEWER -->
+
     <script
         type="module"
-        src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-    </script>
-
-    <!-- Emergency navbar fix -->
-    <style>
-        /*
-         * Desktop:
-         * hamburger hidden
-         */
-        .nav-toggle {
-            display: none !important;
-        }
-
-        /*
-         * Mobile:
-         * hamburger visible
-         */
-        @media (max-width: 768px) {
-            .nav-toggle {
-                display: inline-flex !important;
-                align-items: center;
-                justify-content: center;
-            }
-        }
-    </style>
+        src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"
+    ></script>
 
 </head>
 
+
 <body>
+
 
 <!-- =====================================================
      NAVIGATION
@@ -86,13 +95,19 @@ $loggedUser = current_user();
 
     <div class="container nav-inner">
 
+
         <!-- BRAND -->
 
         <a
             class="brand"
             href="#home"
         >
-            <?= e($settings['site_title'] ?? SITE_NAME) ?>
+
+            <?= e(
+                $settings['site_title']
+                ?? SITE_NAME
+            ) ?>
+
         </a>
 
 
@@ -108,9 +123,10 @@ $loggedUser = current_user();
         </button>
 
 
-        <!-- NAV MENU -->
+        <!-- NAVIGATION MENU -->
 
         <div class="nav-menu">
+
 
             <nav
                 class="nav-links"
@@ -144,7 +160,9 @@ $loggedUser = current_user();
 
             <div class="nav-actions">
 
+
                 <?php if ($isAdmin): ?>
+
 
                     <a
                         class="btn btn-small"
@@ -152,6 +170,7 @@ $loggedUser = current_user();
                     >
                         Dashboard
                     </a>
+
 
                     <a
                         class="btn btn-small btn-ghost"
@@ -163,12 +182,14 @@ $loggedUser = current_user();
 
                 <?php elseif ($loggedUser): ?>
 
+
                     <a
                         class="btn btn-small"
                         href="profile.php"
                     >
                         Profile
                     </a>
+
 
                     <a
                         class="btn btn-small btn-ghost"
@@ -180,6 +201,7 @@ $loggedUser = current_user();
 
                 <?php else: ?>
 
+
                     <a
                         class="btn btn-small btn-primary"
                         href="login.php"
@@ -187,7 +209,9 @@ $loggedUser = current_user();
                         Login
                     </a>
 
+
                 <?php endif; ?>
+
 
             </div>
 
@@ -198,15 +222,16 @@ $loggedUser = current_user();
 </header>
 
 
+
 <!-- =====================================================
-     MAIN
+     MAIN CONTENT
 ===================================================== -->
 
 <main>
 
 
 <!-- =====================================================
-     HOME
+     HERO
 ===================================================== -->
 
 <section
@@ -216,46 +241,62 @@ $loggedUser = current_user();
 
     <div class="container">
 
+
         <p class="eyebrow">
             HELLO MY NAME IS SANDY PURNAMA
         </p>
 
 
         <h1>
+
             <?= e(
                 $settings['tagline']
                 ?? 'Game Developer • 3D Artist • Programmer'
             ) ?>
+
         </h1>
 
 
         <p class="lead">
-            <?= e($settings['about'] ?? '') ?>
+
+            <?= e(
+                $settings['about']
+                ?? ''
+            ) ?>
+
         </p>
 
 
         <div class="actions">
 
+
             <a
-                class="btn btn-primary"
+                class="btn primary"
                 href="#projects"
             >
                 View Projects
             </a>
 
 
-            <?php if (!empty($settings['github_url'])): ?>
+            <?php if (
+                !empty(
+                    $settings['github_url']
+                )
+            ): ?>
 
                 <a
                     class="btn"
                     target="_blank"
                     rel="noopener noreferrer"
-                    href="<?= e($settings['github_url']) ?>"
+                    href="<?= e(
+                        $settings['github_url']
+                    ) ?>"
                 >
                     GitHub
                 </a>
 
             <?php endif; ?>
+
 
         </div>
 
@@ -276,6 +317,7 @@ $loggedUser = current_user();
 
     <div class="container">
 
+
         <div class="section-head">
 
             <div>
@@ -295,70 +337,121 @@ $loggedUser = current_user();
 
         <div class="grid">
 
-            <?php foreach ($projects as $p): ?>
+
+            <?php foreach (
+                $projects
+                as $p
+            ): ?>
+
 
                 <article class="card">
 
-                    <?php if (!empty($p['thumbnail'])): ?>
+
+                    <?php if (
+                        !empty(
+                            $p['thumbnail']
+                        )
+                    ): ?>
+
 
                         <img
-                            src="<?= e(asset_path($p['thumbnail'])) ?>"
-                            alt="<?= e($p['title']) ?>"
+                            src="<?= e(
+                                asset_path(
+                                    $p['thumbnail']
+                                )
+                            ) ?>"
+                            alt="<?= e(
+                                $p['title']
+                            ) ?>"
                             loading="lazy"
                         >
 
+
                     <?php else: ?>
+
 
                         <div class="placeholder">
                             PROJECT
                         </div>
+
 
                     <?php endif; ?>
 
 
                     <div class="card-body">
 
+
                         <span class="tag">
-                            <?= e($p['category']) ?>
+
+                            <?= e(
+                                $p['category']
+                            ) ?>
+
                         </span>
 
 
                         <h3>
-                            <?= e($p['title']) ?>
+
+                            <?= e(
+                                $p['title']
+                            ) ?>
+
                         </h3>
 
 
                         <p>
-                            <?= e($p['description']) ?>
+
+                            <?= e(
+                                $p['description']
+                            ) ?>
+
                         </p>
 
 
                         <div class="card-links">
 
-                            <?php if (!empty($p['project_url'])): ?>
+
+                            <?php if (
+                                !empty(
+                                    $p['project_url']
+                                )
+                            ): ?>
+
 
                                 <a
-                                    href="<?= e($p['project_url']) ?>"
+                                    href="<?= e(
+                                        $p['project_url']
+                                    ) ?>"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
                                     Project ↗
                                 </a>
 
+
                             <?php endif; ?>
 
 
-                            <?php if (!empty($p['github_url'])): ?>
+                            <?php if (
+                                !empty(
+                                    $p['github_url']
+                                )
+                            ): ?>
+
 
                                 <a
-                                    href="<?= e($p['github_url']) ?>"
+                                    href="<?= e(
+                                        $p['github_url']
+                                    ) ?>"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
                                     Source ↗
                                 </a>
 
+
                             <?php endif; ?>
+
 
                         </div>
 
@@ -366,16 +459,20 @@ $loggedUser = current_user();
 
                 </article>
 
+
             <?php endforeach; ?>
 
 
             <?php if (!$projects): ?>
 
+
                 <p class="muted">
                     No projects published yet.
                 </p>
 
+
             <?php endif; ?>
+
 
         </div>
 
@@ -396,6 +493,7 @@ $loggedUser = current_user();
 
     <div class="container">
 
+
         <div class="section-head">
 
             <div>
@@ -415,49 +513,79 @@ $loggedUser = current_user();
 
         <div class="model-grid">
 
-            <?php foreach ($projects as $p): ?>
+
+            <?php foreach (
+                $projects
+                as $p
+            ): ?>
+
 
                 <?php
-                if (empty($p['model_url'])) {
+
+                if (
+                    empty(
+                        $p['model_url']
+                    )
+                ) {
                     continue;
                 }
 
-                $modelFormat = strtolower(
-                    trim((string) $p['model_format'])
-                );
                 ?>
 
 
                 <article class="model-card">
 
+
+                    <?php
+
+                    $modelFormat = strtolower(
+                        $p['model_format'] ?? ''
+                    );
+
+                    ?>
+
+
                     <?php if (
                         $modelFormat === 'glb'
-                        || $modelFormat === 'gltf'
+                        ||
+                        $modelFormat === 'gltf'
                     ): ?>
 
+
                         <model-viewer
-                            src="<?= e(asset_path($p['model_url'])) ?>"
+                            src="<?= e(
+                                asset_path(
+                                    $p['model_url']
+                                )
+                            ) ?>"
                             camera-controls
                             auto-rotate
                             shadow-intensity="1"
                             loading="lazy"
-                            alt="<?= e($p['title']) ?>"
-                        >
-                        </model-viewer>
+                        ></model-viewer>
+
 
                     <?php else: ?>
+
 
                         <div class="model-fallback">
 
                             3D file:
-                            <?= e(strtoupper($modelFormat)) ?>
+
+                            <?= e(
+                                strtoupper(
+                                    $p['model_format']
+                                )
+                            ) ?>
 
                         </div>
+
 
                     <?php endif; ?>
 
 
                     <div class="card-body">
+
 
                         <span class="tag">
                             3D MODEL
@@ -465,40 +593,30 @@ $loggedUser = current_user();
 
 
                         <h3>
-                            <?= e($p['title']) ?>
+
+                            <?= e(
+                                $p['title']
+                            ) ?>
+
                         </h3>
 
 
                         <p>
-                            <?= e($p['description']) ?>
+
+                            <?= e(
+                                $p['description']
+                            ) ?>
+
                         </p>
+
 
                     </div>
 
                 </article>
 
+
             <?php endforeach; ?>
 
-
-            <?php
-            $hasModels = false;
-
-            foreach ($projects as $p) {
-                if (!empty($p['model_url'])) {
-                    $hasModels = true;
-                    break;
-                }
-            }
-            ?>
-
-
-            <?php if (!$hasModels): ?>
-
-                <p class="muted">
-                    No 3D models published yet.
-                </p>
-
-            <?php endif; ?>
 
         </div>
 
@@ -519,6 +637,7 @@ $loggedUser = current_user();
 
     <div class="container">
 
+
         <div class="section-head">
 
             <div>
@@ -538,70 +657,123 @@ $loggedUser = current_user();
 
         <div class="grid">
 
-            <?php foreach ($assets as $a): ?>
+
+            <?php foreach (
+                $assets
+                as $a
+            ): ?>
+
 
                 <article class="card">
 
-                    <?php if (!empty($a['thumbnail'])): ?>
+
+                    <?php if (
+                        !empty(
+                            $a['thumbnail']
+                        )
+                    ): ?>
+
 
                         <img
-                            src="<?= e(asset_path($a['thumbnail'])) ?>"
-                            alt="<?= e($a['title']) ?>"
+                            src="<?= e(
+                                asset_path(
+                                    $a['thumbnail']
+                                )
+                            ) ?>"
+                            alt="<?= e(
+                                $a['title']
+                            ) ?>"
                             loading="lazy"
                         >
 
+
                     <?php else: ?>
+
 
                         <div class="placeholder">
                             ASSET
                         </div>
+
 
                     <?php endif; ?>
 
 
                     <div class="card-body">
 
+
                         <span class="tag">
-                            <?= e($a['category']) ?>
+
+                            <?= e(
+                                $a['category']
+                            ) ?>
+
                         </span>
 
 
                         <h3>
-                            <?= e($a['title']) ?>
+
+                            <?= e(
+                                $a['title']
+                            ) ?>
+
                         </h3>
 
 
                         <p>
-                            <?= e($a['description']) ?>
+
+                            <?= e(
+                                $a['description']
+                            ) ?>
+
                         </p>
 
 
                         <div class="card-links">
 
-                            <?php if (!empty($a['file_url'])): ?>
+
+                            <?php if (
+                                !empty(
+                                    $a['file_url']
+                                )
+                            ): ?>
+
 
                                 <a
-                                    href="<?= e(asset_path($a['file_url'])) ?>"
+                                    href="<?= e(
+                                        asset_path(
+                                            $a['file_url']
+                                        )
+                                    ) ?>"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
                                     Download ↗
                                 </a>
 
+
                             <?php endif; ?>
 
 
-                            <?php if (!empty($a['external_url'])): ?>
+                            <?php if (
+                                !empty(
+                                    $a['external_url']
+                                )
+                            ): ?>
+
 
                                 <a
-                                    href="<?= e($a['external_url']) ?>"
+                                    href="<?= e(
+                                        $a['external_url']
+                                    ) ?>"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                 >
                                     Details ↗
                                 </a>
 
+
                             <?php endif; ?>
+
 
                         </div>
 
@@ -609,16 +781,20 @@ $loggedUser = current_user();
 
                 </article>
 
+
             <?php endforeach; ?>
 
 
             <?php if (!$assets): ?>
 
+
                 <p class="muted">
                     No assets published yet.
                 </p>
 
+
             <?php endif; ?>
+
 
         </div>
 
@@ -639,6 +815,7 @@ $loggedUser = current_user();
 
     <div class="container narrow">
 
+
         <p class="eyebrow">
             ABOUT
         </p>
@@ -650,55 +827,87 @@ $loggedUser = current_user();
 
 
         <p>
+
             <?= nl2br(
-                e($settings['about'] ?? '')
+                e(
+                    $settings['about']
+                    ?? ''
+                )
             ) ?>
+
         </p>
 
 
         <div class="socials">
 
-            <?php if (!empty($settings['github_url'])): ?>
+
+            <?php if (
+                !empty(
+                    $settings['github_url']
+                )
+            ): ?>
+
 
                 <a
-                    href="<?= e($settings['github_url']) ?>"
+                    href="<?= e(
+                        $settings['github_url']
+                    ) ?>"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
                     GitHub
                 </a>
 
+
             <?php endif; ?>
 
 
-            <?php if (!empty($settings['itch_url'])): ?>
+            <?php if (
+                !empty(
+                    $settings['itch_url']
+                )
+            ): ?>
+
 
                 <a
-                    href="<?= e($settings['itch_url']) ?>"
+                    href="<?= e(
+                        $settings['itch_url']
+                    ) ?>"
                     target="_blank"
                     rel="noopener noreferrer"
                 >
                     itch.io
                 </a>
 
+
             <?php endif; ?>
 
 
-            <?php if (!empty($settings['email'])): ?>
+            <?php if (
+                !empty(
+                    $settings['email']
+                )
+            ): ?>
+
 
                 <a
-                    href="mailto:<?= e($settings['email']) ?>"
+                    href="mailto:<?= e(
+                        $settings['email']
+                    ) ?>"
                 >
                     Email
                 </a>
 
+
             <?php endif; ?>
+
 
         </div>
 
     </div>
 
 </section>
+
 
 </main>
 
@@ -726,79 +935,78 @@ $loggedUser = current_user();
 
 
 <!-- =====================================================
-     MOBILE NAVIGATION SCRIPT
+     MOBILE NAVIGATION
 ===================================================== -->
 
 <script>
 
-const toggle = document.querySelector('.nav-toggle');
-const menu = document.querySelector('.nav-menu');
+const toggle =
+    document.querySelector('.nav-toggle');
+
+const menu =
+    document.querySelector('.nav-menu');
+
 
 if (toggle && menu) {
 
-    toggle.addEventListener('click', function () {
+    toggle.addEventListener(
+        'click',
+        function () {
 
-        const expanded =
-            toggle.getAttribute('aria-expanded') === 'true';
+            const expanded =
+                toggle.getAttribute(
+                    'aria-expanded'
+                ) === 'true';
 
-        toggle.setAttribute(
-            'aria-expanded',
-            String(!expanded)
-        );
-
-        menu.classList.toggle('is-open');
-
-    });
-
-
-    /*
-     * Close mobile menu
-     * when a navigation link is clicked.
-     */
-
-    menu.querySelectorAll('a').forEach(function (link) {
-
-        link.addEventListener('click', function () {
-
-            if (window.innerWidth <= 768) {
-
-                menu.classList.remove('is-open');
-
-                toggle.setAttribute(
-                    'aria-expanded',
-                    'false'
-                );
-
-            }
-
-        });
-
-    });
-
-
-    /*
-     * If screen becomes desktop,
-     * reset mobile menu state.
-     */
-
-    window.addEventListener('resize', function () {
-
-        if (window.innerWidth > 768) {
-
-            menu.classList.remove('is-open');
 
             toggle.setAttribute(
                 'aria-expanded',
-                'false'
+                String(!expanded)
+            );
+
+
+            menu.classList.toggle(
+                'is-open'
             );
 
         }
+    );
 
-    });
+
+    menu
+        .querySelectorAll('a')
+        .forEach(function (link) {
+
+            link.addEventListener(
+                'click',
+                function () {
+
+                    if (
+                        window.innerWidth <= 768
+                    ) {
+
+                        menu.classList.remove(
+                            'is-open'
+                        );
+
+
+                        toggle.setAttribute(
+                            'aria-expanded',
+                            'false'
+                        );
+
+                    }
+
+                }
+            );
+
+        });
 
 }
 
 </script>
 
+
 </body>
+
 </html>
