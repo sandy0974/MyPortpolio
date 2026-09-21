@@ -31,7 +31,7 @@ $assets = db()->query("SELECT * FROM assets WHERE published=1 ORDER BY created_a
 <main>
 <section id="home" class="hero">
   <div class="container">
-    <p class="eyebrow">GAME DEVELOPER PORTFOLIO</p>
+    <p class="eyebrow">HELLO MY NAME IS SANDY PURNAMA</p>
     <h1><?= e($settings['tagline'] ?? 'Game Developer • 3D Artist • Programmer') ?></h1>
     <p class="lead"><?= e($settings['about'] ?? '') ?></p>
     <div class="actions">
