@@ -2,29 +2,44 @@ name: Deploy PHP Portfolio to InfinityFree
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
 
-      - name: Deploy via FTP
+    runs-on: ubuntu-latest
+
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Deploy to InfinityFree
         uses: SamKirkland/FTP-Deploy-Action@v4.3.6
         with:
           server: ${{ secrets.INFINITY_FTP_SERVER }}
           username: ${{ secrets.INFINITY_FTP_USER }}
           password: ${{ secrets.INFINITY_FTP_PASSWORD }}
+
           protocol: ftp
+          port: 21
+
           server-dir: ${{ secrets.INFINITY_FTP_DIR }}
+
           exclude: |
             **/.git*
             **/.git*/**
             **/.github/**
+            config.php
             config.example.php
             README.md
             database.sql
-            config.php
