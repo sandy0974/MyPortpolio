@@ -8,6 +8,16 @@ CREATE TABLE IF NOT EXISTS admins (
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS users (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  username VARCHAR(80) NOT NULL UNIQUE,
+  email VARCHAR(180) NOT NULL UNIQUE,
+  full_name VARCHAR(120) NOT NULL,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS projects (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(180) NOT NULL,
@@ -53,5 +63,9 @@ SELECT 1, 'My Game Portfolio', 'Game Developer • 3D Artist • Programmer',
        'Welcome to my portfolio.'
 WHERE NOT EXISTS (SELECT 1 FROM settings WHERE id = 1);
 
--- Generate your own admin password hash with:
--- php -r "echo password_hash('YOUR_PASSWORD', PASSWORD_DEFAULT), PHP_EOL;"
+-- Create a regular user account with a PHP-generated hash, for example:
+-- INSERT INTO users (username, email, full_name, password_hash)
+-- VALUES ('demo', 'demo@example.com', 'Demo User', '$2y$10$YOUR_HASH_HERE');
+--
+-- Generate a password hash:
+-- php -r "echo password_hash('demo123', PASSWORD_DEFAULT), PHP_EOL;"

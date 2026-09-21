@@ -1,10 +1,13 @@
 <?php
+require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/functions.php';
 
 $settings = db()->query("SELECT * FROM settings WHERE id=1")->fetch() ?: [];
 $projects = db()->query("SELECT * FROM projects WHERE published=1 ORDER BY featured DESC, created_at DESC")->fetchAll();
 $assets = db()->query("SELECT * FROM assets WHERE published=1 ORDER BY created_at DESC")->fetchAll();
+$isAdmin = is_admin_logged_in();
+$loggedUser = current_user();
 ?>
 <!doctype html>
 <html lang="en">
@@ -19,12 +22,27 @@ $assets = db()->query("SELECT * FROM assets WHERE published=1 ORDER BY created_a
 <header class="nav">
   <div class="container nav-inner">
     <a class="brand" href="#home"><?= e($settings['site_title'] ?? SITE_NAME) ?></a>
-    <nav>
-      <a href="#projects">Projects</a>
-      <a href="#models">3D Models</a>
-      <a href="#assets">Assets</a>
-      <a href="#about">About</a>
-    </nav>
+    <button class="nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+    <div class="nav-menu">
+      <nav class="nav-links" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#projects">Projects</a>
+        <a href="#models">3D Models</a>
+        <a href="#assets">Assets</a>
+        <a href="#about">About</a>
+      </nav>
+      <div class="nav-actions">
+        <?php if ($isAdmin): ?>
+          <a class="btn btn-small" href="admin/index.php">Dashboard</a>
+          <a class="btn btn-small btn-ghost" href="admin/logout.php">Logout</a>
+        <?php elseif ($loggedUser): ?>
+          <a class="btn btn-small" href="profile.php">Profile</a>
+          <a class="btn btn-small btn-ghost" href="logout.php">Logout</a>
+        <?php else: ?>
+          <a class="btn btn-small btn-primary" href="login.php">Login</a>
+        <?php endif; ?>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -118,5 +136,26 @@ $assets = db()->query("SELECT * FROM assets WHERE published=1 ORDER BY created_a
 </section>
 </main>
 <footer><div class="container">© <?= date('Y') ?> <?= e($settings['site_title'] ?? SITE_NAME) ?></div></footer>
+<script>
+  const toggle = document.querySelector('.nav-toggle');
+  const menu = document.querySelector('.nav-menu');
+
+  if (toggle && menu) {
+    toggle.addEventListener('click', () => {
+      const expanded = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!expanded));
+      menu.classList.toggle('is-open');
+    });
+
+    menu.querySelectorAll('a').forEach((link) => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 768) {
+          menu.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+        }
+      });
+    });
+  }
+</script>
 </body>
 </html>
