@@ -1,4 +1,765 @@
 /* =========================================================
+   ADMIN PANEL - BASE
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+
+    background: #080b10;
+    color: #eef1f5;
+
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+    font: inherit;
+}
+
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.admin-container {
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+.admin-nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+
+    border-bottom: 1px solid #202630;
+
+    background: rgba(8, 11, 16, 0.94);
+
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+}
+
+.admin-nav-inner {
+    min-height: 68px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.admin-brand {
+    color: #f4f6f8;
+
+    font-size: 16px;
+    font-weight: 800;
+
+    letter-spacing: -0.2px;
+}
+
+.admin-brand:hover {
+    color: #b985ff;
+}
+
+.admin-nav-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.admin-nav-links a {
+    padding: 8px 11px;
+
+    border-radius: 7px;
+
+    color: #8993a3;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    transition:
+        color 0.18s ease,
+        background 0.18s ease;
+}
+
+.admin-nav-links a:hover {
+    color: #ffffff;
+    background: #141922;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.admin-main {
+    padding: 48px 0 70px;
+}
+
+
+/* =========================================================
+   EYEBROW
+========================================================= */
+
+.admin-eyebrow {
+    margin: 0;
+
+    color: #9d69e8;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    letter-spacing: 1.6px;
+}
+
+
+/* =========================================================
+   DASHBOARD HEADER
+========================================================= */
+
+.dashboard-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 25px;
+
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+    margin: 6px 0 8px;
+
+    color: #f5f6f8;
+
+    font-size: 38px;
+    line-height: 1.1;
+
+    letter-spacing: -1px;
+}
+
+.dashboard-subtitle {
+    margin: 0;
+
+    color: #818b9a;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.admin-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 40px;
+
+    padding: 0 15px;
+
+    border: 1px solid #303846;
+    border-radius: 8px;
+
+    background: #11161e;
+
+    color: #dce1e8;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease,
+        transform 0.15s ease;
+}
+
+.admin-btn:hover {
+    background: #171d27;
+    border-color: #414b5d;
+
+    transform: translateY(-1px);
+}
+
+.admin-btn-primary {
+    border-color: #914de0;
+
+    background: #7b3fc5;
+    color: #ffffff;
+}
+
+.admin-btn-primary:hover {
+    background: #8a48d8;
+    border-color: #a261ed;
+}
+
+.dashboard-actions {
+    display: flex;
+    gap: 9px;
+}
+
+
+/* =========================================================
+   FLASH MESSAGE
+========================================================= */
+
+.admin-flash {
+    margin-bottom: 24px;
+    padding: 13px 16px;
+
+    border: 1px solid rgba(99, 230, 163, 0.25);
+    border-radius: 9px;
+
+    background: rgba(99, 230, 163, 0.06);
+
+    color: #9af0bd;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+
+    min-height: 125px;
+
+    padding: 20px;
+
+    border: 1px solid #252d39;
+    border-radius: 13px;
+
+    background: #10151c;
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.14);
+}
+
+.stat-card:hover {
+    border-color: #333d4d;
+}
+
+.stat-highlight {
+    border-color: rgba(145, 77, 224, 0.35);
+
+    background:
+        linear-gradient(
+            135deg,
+            rgba(145, 77, 224, 0.11),
+            rgba(16, 21, 28, 1)
+        );
+}
+
+.stat-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 42px;
+
+    width: 42px;
+    height: 42px;
+
+    border: 1px solid #303846;
+    border-radius: 10px;
+
+    background: #151b24;
+
+    font-size: 18px;
+}
+
+.stat-content {
+    min-width: 0;
+}
+
+.stat-label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #7f8999;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+.stat-number {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #f2f4f7;
+
+    font-size: 28px;
+    line-height: 1.1;
+}
+
+.stat-info {
+    color: #687384;
+
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   PANELS
+========================================================= */
+
+.dashboard-panel {
+    margin-bottom: 24px;
+
+    border: 1px solid #252d39;
+    border-radius: 14px;
+
+    background: #10151c;
+
+    overflow: hidden;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    padding: 21px 23px;
+
+    border-bottom: 1px solid #252d39;
+}
+
+.panel-header h2 {
+    margin: 5px 0 0;
+
+    color: #f1f3f6;
+
+    font-size: 20px;
+}
+
+.panel-link {
+    color: #b985ff;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.panel-link:hover {
+    color: #d0a8ff;
+}
+
+
+/* =========================================================
+   ANALYTICS
+========================================================= */
+
+.analytics-summary {
+    display: flex;
+    gap: 28px;
+}
+
+.analytics-summary div {
+    text-align: right;
+}
+
+.analytics-summary span {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #6e7888;
+
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+}
+
+.analytics-summary strong {
+    color: #e9edf2;
+
+    font-size: 20px;
+}
+
+.chart-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 19px 23px 0;
+
+    color: #aeb6c4;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.chart-legend {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    color: #687384;
+
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.chart-legend i {
+    display: block;
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #9d69e8;
+}
+
+.chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+
+    height: 230px;
+
+    padding: 25px 23px 20px;
+}
+
+.chart-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    flex: 1;
+
+    height: 100%;
+}
+
+.chart-value {
+    height: 20px;
+
+    color: #8892a2;
+
+    font-size: 10px;
+}
+
+.chart-bar-wrapper {
+    display: flex;
+    align-items: flex-end;
+
+    width: 100%;
+    flex: 1;
+
+    max-width: 52px;
+}
+
+.chart-bar {
+    width: 100%;
+    min-height: 8px;
+
+    border-radius: 6px 6px 2px 2px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #a76df0,
+            #6939a7
+        );
+
+    transition:
+        height 0.3s ease,
+        filter 0.2s ease;
+}
+
+.chart-bar:hover {
+    filter: brightness(1.15);
+}
+
+.chart-label {
+    margin-top: 9px;
+
+    color: #687384;
+
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   QUICK ACTIONS
+========================================================= */
+
+.quick-actions {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 14px;
+
+    margin-bottom: 24px;
+}
+
+.quick-card {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    padding: 17px;
+
+    border: 1px solid #252d39;
+    border-radius: 12px;
+
+    background: #10151c;
+
+    transition:
+        border-color 0.18s ease,
+        transform 0.18s ease,
+        background 0.18s ease;
+}
+
+.quick-card:hover {
+    border-color: #3b4656;
+
+    background: #131922;
+
+    transform: translateY(-2px);
+}
+
+.quick-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 40px;
+
+    width: 40px;
+    height: 40px;
+
+    border-radius: 9px;
+
+    background: #171d27;
+
+    font-size: 17px;
+}
+
+.quick-text {
+    min-width: 0;
+    flex: 1;
+}
+
+.quick-text strong {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #e7eaf0;
+
+    font-size: 13px;
+}
+
+.quick-text small {
+    display: block;
+
+    color: #687384;
+
+    font-size: 11px;
+}
+
+.quick-arrow {
+    color: #697486;
+
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.admin-table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+.admin-table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    padding: 13px 18px;
+
+    border-bottom: 1px solid #252d39;
+
+    color: #6f7a8b;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    text-align: left;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+.admin-table td {
+    padding: 16px 18px;
+
+    border-bottom: 1px solid #1e252f;
+
+    color: #9da6b5;
+
+    font-size: 13px;
+}
+
+.admin-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.admin-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.015);
+}
+
+.admin-table td strong {
+    color: #e8ebef;
+}
+
+.table-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.table-actions a {
+    color: #9d69e8;
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.table-actions a:hover {
+    color: #c39aff;
+}
+
+.table-actions .danger-link {
+    color: #e47777;
+}
+
+.table-actions .danger-link:hover {
+    color: #ff9696;
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+.status {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 4px 8px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.status-success {
+    background: rgba(99, 230, 163, 0.08);
+    color: #70dda2;
+}
+
+.status-muted {
+    background: rgba(130, 140, 155, 0.08);
+    color: #798392;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+
+.empty-state {
+    padding: 30px !important;
+
+    color: #626d7c !important;
+
+    text-align: center;
+}
+
+
+/* =========================================================
+   ADMIN FOOTER
+========================================================= */
+
+.admin-footer {
+    padding: 25px 0 35px;
+
+    border-top: 1px solid #1d242e;
+
+    color: #596474;
+
+    font-size: 11px;
+
+    text-align: center;
+}
+
+.admin-footer span {
+    color: #414a58;
+}
+
+
+/* =========================================================
    SETTINGS PAGE
 ========================================================= */
 
@@ -7,33 +768,35 @@
     padding-bottom: 70px;
 }
 
-
-/* =========================================================
-   SETTINGS HEADER
-========================================================= */
-
 .settings-header {
     margin-bottom: 30px;
 }
 
 .settings-header h1 {
     margin: 6px 0 10px;
+
+    color: #f5f6f8;
+
     font-size: 42px;
     line-height: 1.1;
+
     letter-spacing: -1px;
 }
 
 .settings-subtitle {
     max-width: 680px;
+
     margin: 0;
+
     color: #8f98a8;
+
     font-size: 15px;
     line-height: 1.7;
 }
 
 
 /* =========================================================
-   ALERTS
+   SETTINGS ALERT
 ========================================================= */
 
 .settings-alert {
@@ -78,12 +841,9 @@
     margin: 0;
 
     color: #aeb6c4;
+
     font-size: 13px;
-    line-height: 1.5;
 }
-
-
-/* SUCCESS */
 
 .settings-success {
     border-color: rgba(80, 220, 150, 0.25);
@@ -94,9 +854,6 @@
     color: #63e6a3;
     background: rgba(80, 220, 150, 0.12);
 }
-
-
-/* ERROR */
 
 .settings-error {
     border-color: rgba(255, 90, 90, 0.3);
@@ -131,11 +888,6 @@
     box-shadow:
         0 12px 35px rgba(0, 0, 0, 0.16);
 }
-
-
-/* =========================================================
-   SETTINGS CARD HEADER
-========================================================= */
 
 .settings-card-header {
     display: flex;
@@ -235,11 +987,6 @@
     line-height: 1.5;
 }
 
-
-/* =========================================================
-   INPUTS
-========================================================= */
-
 .settings-field input,
 .settings-field textarea {
     width: 100%;
@@ -302,7 +1049,7 @@
 
 
 /* =========================================================
-   INPUT GROUP
+   SETTINGS INPUT GROUP
 ========================================================= */
 
 .settings-input-group {
@@ -342,7 +1089,7 @@
 
 
 /* =========================================================
-   TEXTAREA INFORMATION
+   SETTINGS COUNTER
 ========================================================= */
 
 .settings-counter {
@@ -358,7 +1105,7 @@
 
 
 /* =========================================================
-   SAVE BAR
+   SETTINGS SAVE BAR
 ========================================================= */
 
 .settings-save-bar {
@@ -402,11 +1149,6 @@
     box-shadow:
         0 0 0 4px rgba(99, 230, 163, 0.08);
 }
-
-
-/* =========================================================
-   SAVE BUTTON
-========================================================= */
 
 .settings-save-button {
     display: inline-flex;
@@ -468,7 +1210,70 @@
    RESPONSIVE
 ========================================================= */
 
+@media (max-width: 900px) {
+
+    .stats-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .quick-actions {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
 @media (max-width: 768px) {
+
+    .admin-container {
+        width: min(100% - 28px, 1180px);
+    }
+
+    .admin-main {
+        padding-top: 30px;
+    }
+
+    .admin-nav-inner {
+        min-height: 60px;
+    }
+
+    .admin-nav-links {
+        gap: 2px;
+    }
+
+    .admin-nav-links a {
+        padding: 7px 8px;
+
+        font-size: 11px;
+    }
+
+    .dashboard-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .dashboard-header h1 {
+        font-size: 32px;
+    }
+
+    .dashboard-actions {
+        width: 100%;
+    }
+
+    .dashboard-actions .admin-btn {
+        flex: 1;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .analytics-summary {
+        gap: 15px;
+    }
 
     .settings-page {
         padding-top: 28px;
@@ -526,10 +1331,52 @@
     .settings-input-group input {
         border-radius: 0 0 9px 9px;
     }
+
 }
 
 
 @media (max-width: 480px) {
+
+    .admin-container {
+        width: min(100% - 20px, 1180px);
+    }
+
+    .admin-nav-inner {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        padding: 13px 0;
+    }
+
+    .admin-nav-links {
+        width: 100%;
+    }
+
+    .admin-nav-links a {
+        flex: 1;
+
+        text-align: center;
+    }
+
+    .panel-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .analytics-summary {
+        width: 100%;
+
+        justify-content: space-between;
+    }
+
+    .chart {
+        gap: 5px;
+
+        padding-left: 12px;
+        padding-right: 12px;
+    }
 
     .settings-card-header {
         gap: 12px;
