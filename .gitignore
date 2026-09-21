@@ -1,0 +1,6 @@
+config.php
+/uploads/images/*
+!/uploads/images/.gitkeep
+/uploads/models/*
+!/uploads/models/.gitkeep
+.DS_Store

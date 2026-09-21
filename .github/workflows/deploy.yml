@@ -1,0 +1,30 @@
+name: Deploy PHP Portfolio to InfinityFree
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.INFINITY_FTP_SERVER }}
+          username: ${{ secrets.INFINITY_FTP_USER }}
+          password: ${{ secrets.INFINITY_FTP_PASSWORD }}
+          protocol: ftp
+          server-dir: ${{ secrets.INFINITY_FTP_DIR }}
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            config.example.php
+            README.md
+            database.sql
+            config.php
