@@ -28,12 +28,13 @@ if (!$settings) {
         'id' => 1,
         'site_title' => 'My Game Portfolio',
         'tagline' => 'Game Developer • 3D Artist • Programmer',
-        'about' => 'Welcome to my portfolio.',
+        'about' => '',
         'github_url' => '',
         'itch_url' => '',
         'email' => ''
     ];
 }
+
 
 /*
 |--------------------------------------------------------------------------
@@ -52,7 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     /*
     |--------------------------------------------------------------------------
-    | BASIC VALIDATION
+    | VALIDATION
     |--------------------------------------------------------------------------
     */
 
@@ -60,7 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $error = 'Site title cannot be empty.';
 
-    } elseif ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    } elseif (
+        $email !== '' &&
+        !filter_var($email, FILTER_VALIDATE_EMAIL)
+    ) {
 
         $error = 'Please enter a valid email address.';
 
@@ -70,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             /*
             |--------------------------------------------------------------------------
-            | CHECK IF SETTINGS ROW EXISTS
+            | CHECK SETTINGS ROW
             |--------------------------------------------------------------------------
             */
 
@@ -84,6 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $check->execute();
 
             $exists = $check->fetchColumn();
+
 
             /*
             |--------------------------------------------------------------------------
@@ -116,9 +121,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             }
 
+
             /*
             |--------------------------------------------------------------------------
-            | INSERT IF ROW DOES NOT EXIST
+            | INSERT
             |--------------------------------------------------------------------------
             */
 
@@ -155,9 +161,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
             }
 
+
             /*
             |--------------------------------------------------------------------------
-            | UPDATE LOCAL DATA
+            | UPDATE FORM DATA
             |--------------------------------------------------------------------------
             */
 
@@ -173,7 +180,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } catch (Throwable $e) {
 
             $error = 'Failed to save settings. Please try again.';
-
         }
     }
 }
@@ -181,6 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <!doctype html>
+
 <html lang="en">
 
 <head>
@@ -192,20 +199,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         content="width=device-width, initial-scale=1"
     >
 
-    <title>Site Settings</title>
+    <title>
+        Site Settings
+    </title>
 
     <link
         rel="stylesheet"
-        href="../assets/css/admin.css?v=20260921-settings"
+        href="../assets/css/admin.css?v=20260921-settings3"
     >
 
 </head>
 
 <body>
 
-<!-- =====================================================
+
+<!-- =========================================================
      ADMIN NAVIGATION
-===================================================== -->
+========================================================= -->
 
 <header class="admin-nav">
 
@@ -217,6 +227,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         >
             Portfolio Admin
         </a>
+
 
         <nav class="admin-nav-links">
 
@@ -239,15 +250,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </header>
 
 
-<!-- =====================================================
-     MAIN
-===================================================== -->
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
 
 <main class="admin-main settings-page">
 
     <div class="admin-container">
 
-        <!-- PAGE HEADER -->
+
+        <!-- =================================================
+             BACK TO DASHBOARD
+        ================================================= -->
+
+        <a
+            href="index.php"
+            class="settings-back"
+        >
+
+            <span class="settings-back-arrow">
+                ←
+            </span>
+
+            <span>
+                Back to Dashboard
+            </span>
+
+        </a>
+
+
+        <!-- =================================================
+             PAGE HEADER
+        ================================================= -->
 
         <section class="settings-header">
 
@@ -262,8 +296,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </h1>
 
                 <p class="settings-subtitle">
-                    Manage your portfolio title, description,
-                    social links and contact information.
+                    Manage your portfolio title,
+                    description, social links
+                    and contact information.
                 </p>
 
             </div>
@@ -272,7 +307,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
         <!-- =================================================
-             MESSAGES
+             SUCCESS MESSAGE
         ================================================= -->
 
         <?php if ($success): ?>
@@ -284,6 +319,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </span>
 
                 <div>
+
                     <strong>
                         Saved
                     </strong>
@@ -291,12 +327,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p>
                         <?= e($success) ?>
                     </p>
+
                 </div>
 
             </div>
 
         <?php endif; ?>
 
+
+        <!-- =================================================
+             ERROR MESSAGE
+        ================================================= -->
 
         <?php if ($error): ?>
 
@@ -307,6 +348,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </span>
 
                 <div>
+
                     <strong>
                         Error
                     </strong>
@@ -314,6 +356,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <p>
                         <?= e($error) ?>
                     </p>
+
                 </div>
 
             </div>
@@ -331,9 +374,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             class="settings-form"
         >
 
-            <!-- =============================================
+
+            <!-- =================================================
                  GENERAL
-            ============================================== -->
+            ================================================= -->
 
             <section class="settings-card">
 
@@ -354,8 +398,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </h2>
 
                         <p>
-                            Basic information displayed throughout
-                            your portfolio.
+                            Basic information displayed
+                            throughout your portfolio.
                         </p>
 
                     </div>
@@ -364,6 +408,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                 <div class="settings-fields">
+
 
                     <!-- SITE TITLE -->
 
@@ -374,8 +419,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </label>
 
                         <span class="settings-help">
-                            The name shown in your website header
-                            and browser title.
+                            The name shown in your website
+                            header and browser title.
                         </span>
 
                         <input
@@ -450,9 +495,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </section>
 
 
-            <!-- =============================================
-                 SOCIAL
-            ============================================== -->
+            <!-- =================================================
+                 SOCIAL LINKS
+            ================================================= -->
 
             <section class="settings-card">
 
@@ -483,6 +528,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                 <div class="settings-fields">
+
 
                     <!-- GITHUB -->
 
@@ -552,9 +598,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </section>
 
 
-            <!-- =============================================
+            <!-- =================================================
                  CONTACT
-            ============================================== -->
+            ================================================= -->
 
             <section class="settings-card">
 
@@ -575,8 +621,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </h2>
 
                         <p>
-                            Contact information displayed on
-                            your public portfolio.
+                            Contact information displayed
+                            on your public portfolio.
                         </p>
 
                     </div>
@@ -585,6 +631,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
                 <div class="settings-fields">
+
 
                     <!-- EMAIL -->
 
@@ -595,8 +642,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </label>
 
                         <span class="settings-help">
-                            Visitors can use this address to
-                            contact you.
+                            Visitors can use this address
+                            to contact you.
                         </span>
 
                         <input
@@ -615,9 +662,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </section>
 
 
-            <!-- =============================================
+            <!-- =================================================
                  SAVE BAR
-            ============================================== -->
+            ================================================= -->
 
             <div class="settings-save-bar">
 
@@ -626,15 +673,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <span class="settings-save-dot"></span>
 
                     <span>
-                        Changes are saved to your portfolio database.
+                        Changes are saved to your
+                        portfolio database.
                     </span>
 
                 </div>
+
 
                 <button
                     type="submit"
                     class="settings-save-button"
                 >
+
                     <span>
                         Save Settings
                     </span>
@@ -647,6 +697,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             </div>
 
+
         </form>
 
     </div>
@@ -654,16 +705,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </main>
 
 
-<!-- =====================================================
+<!-- =========================================================
      FOOTER
-===================================================== -->
+========================================================= -->
 
 <footer class="admin-footer">
 
     <div class="admin-container">
 
         Portfolio Admin Panel
-        <span>• <?= date('Y') ?></span>
+
+        <span>
+            • <?= date('Y') ?>
+        </span>
 
     </div>
 
@@ -671,4 +725,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 
 </body>
+
 </html>
